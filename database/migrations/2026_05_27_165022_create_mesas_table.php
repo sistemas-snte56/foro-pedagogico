@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveles', function (Blueprint $table) {
+        Schema::create('mesas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();            
-            $table->timestamps();
+            $table->enum('nivel_educativo', ['PREESCOLAR', 'PRIMARIA', 'SECUNDARIA']);
+            $table->integer('numero'); // 1, 2, 3...
+            $table->integer('capacidad');
+            $table->integer('ocupados')->default(0);
+            $table->timestamps();            
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveles');
+        Schema::dropIfExists('mesas');
     }
 };

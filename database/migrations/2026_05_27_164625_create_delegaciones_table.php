@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('delegaciones', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('region_id')->constrained('regiones');
+            $table->string('delegacion')->unique();             // D-II-59
+            $table->string('sede')->nullable();            
+            $table->foreignId('nivel_id')->constrained('niveles');            
             $table->timestamps();
         });
     }
