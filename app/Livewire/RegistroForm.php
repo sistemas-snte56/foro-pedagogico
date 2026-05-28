@@ -58,26 +58,41 @@ class RegistroForm extends Component
         'nombre'               => 'required|string|max:100',
         'genero'               => 'required|in:H,M,O',
         'nivel'                => 'required|in:preescolar,primaria,secundaria',
-        'delegacion'           => 'required|string|max:100',
+        'selectIdDelegacion'   => 'required|string|max:100',
         'clave_centro_trabajo' => 'required|string|max:50',
         'rfc'                  => 'required|string|size:13',
-        'numero_personal'      => 'required|string|max:20',
+        'numero_personal'      => 'required|numeric',
+    ];
+
+    protected $messages = [
+        'apellido_paterno.required' => 'El apellido paterno es obligatorio.',
+        'apellido_materno.required' => 'El apellido materno es obligatorio.',
+        'nombre.required' => 'El nombre es obligatorio.',
+        'genero.required' => 'El género es obligatorio.',
+        'nivel.required' => 'El nivel educativo es obligatorio.',
+        'selectIdDelegacion.required' => 'La delegación es obligatoria.',
+        'clave_centro_trabajo.required' => 'La clave del centro de trabajo es obligatoria.',
+        'rfc.required' => 'El RFC es obligatorio.',
+        'rfc.size' => 'El RFC debe tener exactamente 13 caracteres.',
+        'numero_personal.required' => 'El número de personal es obligatorio.',
+        'numero_personal.numeric' => 'El número de personal debe ser un número.',
+
     ];
 
     public function submit()
     {
-        // $this->validate();
+        $this->validate();
 
-        dd(
-            $this->apellido_paterno, 
-            $this->apellido_materno, 
-            $this->nombre, 
-            $this->genero, 
-            $this->nivel, 
-            $this->selectIdDelegacion, 
-            $this->clave_centro_trabajo, 
-            $this->rfc, 
-            $this->numero_personal);
+        // dd(
+        //     $this->apellido_paterno, 
+        //     $this->apellido_materno, 
+        //     $this->nombre, 
+        //     $this->genero, 
+        //     $this->nivel, 
+        //     $this->selectIdDelegacion, 
+        //     $this->clave_centro_trabajo, 
+        //     $this->rfc, 
+        //     $this->numero_personal);
 
 
         // Buscar mesa disponible del nivel seleccionado
@@ -87,6 +102,10 @@ class RegistroForm extends Component
             ->lockForUpdate()
             ->first();
 
+        // dd( "Mesa asignada: " . $mesa->numero,
+        //     "Nivel: " . $this->nivel,
+        //     );
+
         if (!$mesa) {
             $this->addError('nivel', 'No hay mesas disponibles para este nivel.');
             return;
@@ -94,13 +113,14 @@ class RegistroForm extends Component
 
         // Crear registro y actualizar mesa
         $registro = Participante::create([
-            'apellido_paterno'     => $this->apellido_paterno,
-            'apellido_materno'     => $this->apellido_materno,
-            'nombre'               => $this->nombre,
-            // 'nivel'                => $this->nivel,
-            'delegacion'           => $this->delegacion,
-            'clave_centro_trabajo' => $this->clave_centro_trabajo,
-            'rfc'                  => $this->rfc,
+            'apellido_paterno'     =>  mb_strtoupper(trim($this->apellido_paterno), 'UTF-8'),
+            'apellido_materno'     =>  mb_strtoupper(trim($this->apellido_materno), 'UTF-8'),
+            'nombre'               =>  mb_strtoupper(trim($this->nombre), 'UTF-8'),
+            'genero'               => $this->genero,
+            'nivel'                => $this->nivel,
+            'delegacion_id'        => $this->selectIdDelegacion,
+            'clave_centro_trabajo' =>  mb_strtoupper(trim($this->clave_centro_trabajo), 'UTF-8'),
+            'rfc'                  =>  mb_strtoupper(trim($this->rfc), 'UTF-8'),
             'numero_personal'      => $this->numero_personal,
             'mesa_id'              => $mesa->id,
         ]);
@@ -110,8 +130,8 @@ class RegistroForm extends Component
         $this->mesaAsignada = $mesa->numero;
         $this->registroExitoso = true;
         $this->reset([
-            'apellido_paterno','apellido_materno','nombre','nivel',
-            'delegacion','clave_centro_trabajo','rfc','numero_personal'
+            'apellido_paterno','apellido_materno','nombre','genero', 'nivel',
+            'selectIdDelegacion','clave_centro_trabajo','rfc','numero_personal'
         ]);        
     }
 

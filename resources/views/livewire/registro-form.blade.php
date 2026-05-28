@@ -34,9 +34,6 @@
                 @error('nombre') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
 
-
-
-
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-600">Genero</label>
@@ -62,46 +59,36 @@
                 </div>
             </div>
 
-
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-600">Clave Centro de Trabajo</label>
                     <input type="text" wire:model="clave_centro_trabajo"
                         class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    @error('clave_centro_trabajo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    @error('clave_centro_trabajo') <span class="text-[#89194b] text-xs">{{ $message }}</span> @enderror
+                    <p class="text-[#50d71e] ...">
+                        Lorem ipsum dolor sit amet...
+                    </p>
                 </div>
             </div>
 
-
-
-
             <div class="grid grid-cols-2 gap-4">
-
-
-
                 {{-- REGIÓN --}}
                 <div>
                     <label class="block text-base font-medium mb-2 tracking-wide" style="color:#353a40;">Región</label>
                     <select wire:model.live="selectIdRegion"
                         class="w-full px-4 py-3 text-base rounded-lg border outline-none transition focus:ring-2"
                         style="border-color:#d1d5db;">
-
                         <option value="">Selecciona...</option>
-
                         @foreach($regiones as $region)
-                        <option value="{{ $region->id }}">
-                            {{ $region->nombre }}
-                        </option>
+                            <option value="{{ $region->id }}">
+                                {{ $region->nombre }}
+                            </option>
                         @endforeach
-
                     </select>
-
                     @error('selectIdRegion')
-                    <p class="mt-1 text-sm" style="color:#89194b;">
-
-                        {{ $message }}
-
-                    </p>
+                        <p class="mt-1 text-sm" style="color:#89194b;">
+                            {{ $message }}
+                        </p>
                     @enderror
 
                 </div>
@@ -171,9 +158,16 @@
                 </div>
             </div>
 
-            <button type="submit"
-                class="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
-                Registrarme
+            <button type="submit" 
+                wire:loading.attr="disabled" 
+                wire:target="submit"
+                class="w-full sm:w-auto px-8 py-3 text-base font-medium text-white rounded-lg transition flex items-center justify-center gap-2"
+                style="background:#89194b;" 
+                onmouseover="this.style.background='#6a143a'"
+                onmouseout="this.style.background='#89194b'">
+                
+                <span wire:loading.remove wire:target="submit">Buscar</span>
+                <span wire:loading wire:target="submit">Buscando...</span>
             </button>
 
         </form>
